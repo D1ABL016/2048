@@ -185,7 +185,6 @@ function updateValues(board) {
     }
 }
 
-
 function generateRandomTile(board){
     let row = Math.floor(Math.random() * 4);
     let col = Math.floor(Math.random() * 4);
@@ -197,6 +196,7 @@ function generateRandomTile(board){
     board[row][col] = num;
     return board
 }
+
 let colours = {
     0: "rgba(238, 228, 218, 0.35)",
     2: "#eee4da",
@@ -208,7 +208,8 @@ let colours = {
     128: "#edd073",
     256: "#edcc62",
     512: "#edc950",
-    1024: "#edc53f"
+    1024: "#edc53f",
+    2048: "#edc22e"
 
 };
 
@@ -221,30 +222,69 @@ document.onkeydown = function (event) {
         case 37:
             console.log("left")
             score, board = moveLeft(board)
+            win = winnerPresent(board)
+            gameOver = EndGameChecker(board)
+            if (gameOver){
+                // alert("GAME OVER")
+            }
+            if (!win) {
+                //make a function to generate a random tile at empty place
+                board = generateRandomTile(board);
+                updateFrontend(board);
+            }
+            else {
+                //make a function to print you won
+                alert("you won")
+                board = initializeGame()
+
+            }   
             break;
         case 38:
             console.log("up")
             score, board = moveUp(board)
+            win = winnerPresent(board)
+            if (!win) {
+                //make a function to generate a random tile at empty place
+                board = generateRandomTile(board);
+                updateFrontend(board);
+            }
+            else {
+                //make a function to print you won
+                alert("you won")
+            }   
             break;
         case 39:
             console.log("right")
             score, board = moveRight(board)
+            win = winnerPresent(board)
+            if (!win) {
+                //make a function to generate a random tile at empty place
+                board = generateRandomTile(board);
+                updateFrontend(board);
+           }
+            else {
+                //make a function to print you won
+                alert("you won")
+            }   
             break;
         case 40:
             console.log("down")
             score, board = moveDown(board)
+            win = winnerPresent(board)
+            if (!win) {
+                //make a function to generate a random tile at empty place
+                board = generateRandomTile(board);
+                updateFrontend(board);
+            }
+            else {
+                //make a function to print you won
+                alert("you won")
+            }   
             break;
+        
     }
     // updateFrontend(board)
-    win = winnerPresent(board)
-if (!win) {
-    //make a function to generate a random tile at empty place
-    board = generateRandomTile(board);
-    updateFrontend(board);
-}
-else {
-    //make a function to print you won
-}
+    
 };
 // printmat(board)
 
