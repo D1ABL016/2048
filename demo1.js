@@ -202,13 +202,15 @@ function updateScore(scores) {//////////
 
 }
 
-function updateBESTScore(scores) {//////////
-    let currScore = document.getElementById("best")
-    let num = scores.toString()
-    let str = "score: " + num
+function updateBESTScore(currScore) {//////////
+    let bestScore = document.getElementById("best")
+    let besti = getnums(bestScore)
+    let maxi = Math.max(currScore, besti)
+    let num = maxi.toString()
+    let str = "best: " + num
     // console.log(str)
-    currScore.textContent = ""
-    currScore.textContent = str
+    bestScore.textContent = ""
+    bestScore.textContent = str
 
 }
 
@@ -239,11 +241,12 @@ function generateRandomTile(board) {
     return board
 }
 
-function temp(board,score) {
+function temp(board, score) {
     win = winnerPresent(board)
     gameOver = EndGameChecker(board)
     if (gameOver) {
         alert("GAME OVER")
+
         updateBESTScore(score)
         board = initializeGame()
     }
@@ -266,6 +269,18 @@ function temp(board,score) {
     return board
 }
 
+function getnums(str) {
+
+    let numbers = "";
+    for (let i = 0; i < str.length; i++) {
+        if (!isNaN(str[i])) {
+            numbers += str[i];
+        }
+    }
+    console.log(numbers)
+    // console.log(matches[0])
+    return numbers
+}
 
 let colours = {
     0: "rgba(238, 228, 218, 0.35)",
@@ -295,7 +310,7 @@ document.onkeydown = function (event) {
             board = b
             Totalscore = Totalscore + score
             console.log(score, Totalscore)
-            board = temp(board,Totalscore)
+            board = temp(board, Totalscore)
 
             break;
         case 38:
@@ -304,7 +319,7 @@ document.onkeydown = function (event) {
             board = b
             Totalscore = Totalscore + score
             console.log(score, Totalscore)
-            board = temp(board,Totalscore)
+            board = temp(board, Totalscore)
             break;
         case 39:
             [a, b] = moveRight(board)
@@ -312,7 +327,7 @@ document.onkeydown = function (event) {
             board = b
             Totalscore = Totalscore + score
             console.log(score, Totalscore)
-            board = temp(board,Totalscore)
+            board = temp(board, Totalscore)
 
             break;
         case 40:
@@ -321,7 +336,7 @@ document.onkeydown = function (event) {
             board = b
             Totalscore = Totalscore + score
             console.log(score, Totalscore)
-            board = temp(board,Totalscore)
+            board = temp(board, Totalscore)
             break;
     }
 };
