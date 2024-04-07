@@ -155,6 +155,7 @@ function moveDown() {
 }
 
 function initializeGame() {
+    console.clear()
     // board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     Totalscore = 0
     score = 0
@@ -221,7 +222,7 @@ function updateFrontend() {
     resetgrid();
     // updatecolours(board)
     updateValues()
-    // updateScore(board)
+    updateScore()
 }
 
 function resetgrid() {
