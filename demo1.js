@@ -1,6 +1,48 @@
 
-function compress(board) {
 
+board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+Totalscore = 0
+score = 0
+
+let colours = {
+    0: "rgba(238, 228, 218, 0.35)",
+    2: "#eee4da",
+    4: "#eee1c9",
+    8: "#f3b27a",
+    16: "#f69664",
+    32: "#f77c5f",
+    64: "#f75f3b",
+    128: "#edd073",
+    256: "#edcc62",
+    512: "#edc950",
+    1024: "#edc53f",
+    2048: "#edc22e"
+
+};
+
+initializeGame()
+
+function saveBoard() {   
+    let currGrid = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            currGrid[i][j] = board[i][j] 
+        }
+    }
+    return currGrid
+}
+
+function anyChange(curr){
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            if(curr[i][j] != board[i][j] )  return true
+        }
+    }
+    return false
+}
+
+
+function compress() {
     // let newMatrix = board;
     for (let i = 0; i < 4; i++) {
         let pos = 0
@@ -12,10 +54,10 @@ function compress(board) {
             }
         }
     }
-    return board
+    // return board
 }
 
-function merge(board) {
+function merge() {
     let totalScore = 0
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
@@ -27,11 +69,11 @@ function merge(board) {
         }
     }
     // console.log(totalScore)
-    return [totalScore, board]
+    return totalScore
     // return false;
 }
 
-function reverse(board) {
+function reverse() {
     for (let i = 0; i < board[0].length; i++) {
         let k = 3;
         for (let j = 0; j < 2; j++) {
@@ -39,20 +81,21 @@ function reverse(board) {
             k -= 1
         }
     }
-    return board
+    // return board
 }
 
-function transpose(board) {
+function transpose() {
     newmat = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
             newmat[j][i] = board[i][j]
         }
     }
-    return newmat
+    board = newmat
+    // return newmat
 }
 
-function printmat(board) {
+function printmat() {
     for (let i = 0; i < 4; i++) {
         let msg = ""
         for (let j = 0; j < 4; j++) {
@@ -63,55 +106,59 @@ function printmat(board) {
     // console.log("kfjkdjkdjkjfkj")
 }
 
-function moveLeft(board) {
+function moveLeft() {
     // console.log("in left")
-    let nums = 0
-    board = compress(board)
-    let [a, b] = merge(board)
-    nums = a
-    board = b
-    console.log("nums : ", nums)
+    // let nums = 0
+    let currGrid = saveBoard()
+    compress()
+    printmat(currGrid)
+    let a = merge()
+    printmat(currGrid)
+    // board = b
+    // console.log("nums : ", nums)
     // printmat(board)
-    board = compress(board)
+    compress()
+    let change = anyChange(currGrid)
     // printmat(board)
     // updateFrontend(newgrid)
-    return [nums, board]
+    return [a, change]
 }
 
-function moveRight(board) {
-    board = reverse(board)
-    let [a, b] = moveLeft(board)
-    score = a
-    board = b
-    board = reverse(board)
-    return [score, board]
+function moveRight() {
+    reverse()
+    let [a, b] = moveLeft()
+    // score = a
+    // board = b
+    reverse()
+    return [a, b]
 }
 
-function moveUp(board) {
-    board = transpose(board)
-    let [a, b] = moveLeft(board)
-    score = a
-    board = b
+function moveUp() {
+    transpose()
+    let [a, b] = moveLeft()
+    // score = a
+    // board = b
     // score, board = moveLeft(board)
-    board = transpose(board)
-    return [score, board]
+    transpose()
+    return [a, b]
 }
 
-function moveDown(board) {
-    board = transpose(board)
-    let [a, b] = moveRight(board)
-    score = a
-    board = b
+function moveDown() {
+    transpose()
+    let [a, b] = moveRight()
+    // score = a
+    // board = b
     // score, board = moveRight(board)
-    board = transpose(board)
-    return [score, board]
+    transpose()
+    return [a, b]
 
 }
 
 function initializeGame() {
-    let board = [
-        [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]
-    ];
+    // board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    Totalscore = 0
+    score = 0
+    board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     let row = Math.floor(Math.random() * 4);
     let col = Math.floor(Math.random() * 4);
     board[row][col] = 2;
@@ -122,11 +169,13 @@ function initializeGame() {
     }
     // console.log(row,col)
     board[row][col] = 2;
-    updateFrontend(board)
-    return board
+    // printmat(board)
+    // console.log("dhsjdjshdjshjdhsjdhsj")
+    updateFrontend()
+    // return board
 }
 
-function EndGameChecker(board) {// if return true then means that game is over 
+function EndGameChecker() {// if return true then means that game is over 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (board[i][j] == 0) {
@@ -152,12 +201,12 @@ function EndGameChecker(board) {// if return true then means that game is over
         }
 
     }
-    if (board[3][3] == 0) return false;
+    if (board[3][3] == 0) { return false; }
 
     return true;
 }
 
-function winnerPresent(board) {
+function winnerPresent() {
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
             if (board[i][j] == 2048) {
@@ -168,33 +217,33 @@ function winnerPresent(board) {
     return false;
 }
 
-function updateFrontend(board) {
+function updateFrontend() {
     resetgrid();
     // updatecolours(board)
-    updateValues(board)
+    updateValues()
     // updateScore(board)
 }
 
 function resetgrid() {
-    let board = [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]
-    for (let i = 0; i < board[0].length; i++) {
-        for (let j = 0; j < board[0].length; j++) {
+    let tempGrid = [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]
+    for (let i = 0; i < tempGrid[0].length; i++) {
+        for (let j = 0; j < tempGrid[0].length; j++) {
 
             let cellValue = (4 * i + j + 1).toString()
             let cellElement = document.getElementById(cellValue)
             let col = colours[0]
             // console.log(typeof(col) , i,j)
             cellElement.style.backgroundColor = col;
-            cellElement.textContent = board[i][j].toString()
+            cellElement.textContent = tempGrid[i][j].toString()
 
         }
     }
 
 }
 
-function updateScore(scores) {//////////
+function updateScore() {//////////
     let currScore = document.getElementById("score")
-    let num = scores.toString()
+    let num = Totalscore.toString()
     let str = "score: " + num
     // console.log(str)
     currScore.textContent = ""
@@ -202,10 +251,10 @@ function updateScore(scores) {//////////
 
 }
 
-function updateBESTScore(currScore) {//////////
+function updateBESTScore() {//////////
     let bestScore = document.getElementById("best")
     let besti = getnums(bestScore)
-    let maxi = Math.max(currScore, besti)
+    let maxi = Math.max(Totalscore, besti)
     let num = maxi.toString()
     let str = "best: " + num
     // console.log(str)
@@ -214,7 +263,7 @@ function updateBESTScore(currScore) {//////////
 
 }
 
-function updateValues(board) {
+function updateValues() {
     for (let i = 0; i < board[0].length; i++) {
         for (let j = 0; j < board[0].length; j++) {
             if (board[i][j] != 0) {
@@ -229,7 +278,7 @@ function updateValues(board) {
     }
 }
 
-function generateRandomTile(board) {
+function generateRandomTile() {
     let row = Math.floor(Math.random() * 4);
     let col = Math.floor(Math.random() * 4);
     let num = 2;
@@ -238,35 +287,37 @@ function generateRandomTile(board) {
         col = Math.floor(Math.random() * 4);
     }
     board[row][col] = num;
-    return board
+    // return board
 }
 
-function temp(board, score) {
-    win = winnerPresent(board)
-    gameOver = EndGameChecker(board)
+function temp(changed) {
+    win = winnerPresent()
+    gameOver = EndGameChecker()
     if (gameOver) {
         alert("GAME OVER")
 
-        updateBESTScore(score)
-        board = initializeGame()
+        updateBESTScore()
+        initializeGame()
     }
     else {
-        updateScore(score)
+        updateScore()
 
 
         if (!win) {
             //make a function to generate a random tile at empty place
-            board = generateRandomTile(board);
-            updateFrontend(board);
+            if (changed) {
+                generateRandomTile();
+            }
+            updateFrontend();
         }
         else {
             //make a function to print you won
             alert("you won")
-            board = initializeGame()
+            initializeGame()
         }
     }
     // updateScore(score)
-    return board
+    // return board
 }
 
 function getnums(str) {
@@ -277,66 +328,53 @@ function getnums(str) {
             numbers += str[i];
         }
     }
-    console.log(numbers)
+    // console.log(numbers)
     // console.log(matches[0])
     return numbers
 }
 
-let colours = {
-    0: "rgba(238, 228, 218, 0.35)",
-    2: "#eee4da",
-    4: "#eee1c9",
-    8: "#f3b27a",
-    16: "#f69664",
-    32: "#f77c5f",
-    64: "#f75f3b",
-    128: "#edd073",
-    256: "#edcc62",
-    512: "#edc950",
-    1024: "#edc53f",
-    2048: "#edc22e"
 
-};
 
-let board = initializeGame()
-let Totalscore = 0
-let score = 0
-let [a, b] = [0, 0]
 document.onkeydown = function (event) {
+    let changed = false;
+    let [a, b] = [0, 0]
     switch (event.keyCode) {
         case 37:
-            [a, b] = moveLeft(board)
+            [a, b] = moveLeft()
+            console.log(a, b, score)
             score = a
-            board = b
+            changed = b
             Totalscore = Totalscore + score
-            console.log(score, Totalscore)
-            board = temp(board, Totalscore)
-
+            // console.log(score, Totalscore)
+            temp(changed)
             break;
         case 38:
-            [a, b] = moveUp(board)
+            [a, b] = moveUp()
+            console.log(a, b, score)
             score = a
-            board = b
+            changed = b
             Totalscore = Totalscore + score
-            console.log(score, Totalscore)
-            board = temp(board, Totalscore)
+            // console.log(score, Totalscore)
+            temp(changed)
             break;
         case 39:
-            [a, b] = moveRight(board)
+            [a, b] = moveRight()
+            console.log(a, b, score)
             score = a
-            board = b
+            changed = b
             Totalscore = Totalscore + score
-            console.log(score, Totalscore)
-            board = temp(board, Totalscore)
+            // console.log(score, Totalscore)
+            temp(changed)
 
             break;
         case 40:
-            [a, b] = moveDown(board)
+            [a, b] = moveDown()
+            console.log(a, b, score)
             score = a
-            board = b
+            changed = b
             Totalscore = Totalscore + score
-            console.log(score, Totalscore)
-            board = temp(board, Totalscore)
+            // console.log(score, Totalscore)
+            temp(changed)
             break;
     }
 };

@@ -26,6 +26,7 @@ function merge(board) {
             }
         }
     }
+    // console.log(totalScore)
     return totalScore, board
     // return false;
 }
@@ -59,18 +60,20 @@ function printmat(board) {
         }
         console.log(msg)
     }
-    console.log("kfjkdjkdjkjfkj")
+    // console.log("kfjkdjkdjkjfkj")
 }
 
 function moveLeft(board) {
     // console.log("in left")
+    let nums = 0
     board = compress(board)
-    score, board = merge(board)
+    nums, board = merge(board)
+    // console.log(nums)
     // printmat(board)
     board = compress(board)
     // printmat(board)
     // updateFrontend(newgrid)
-    return score, board
+    return nums, board
 }
 
 function moveRight(board) {
@@ -114,21 +117,34 @@ function initializeGame() {
 }
 
 function EndGameChecker(board) {// if return true then means that game is over 
-    for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-
-            let curr = board[i][j];
-            if (curr != 0) {
-                if (((i + 1) < 4 && (j + 1) < 4) && (curr != board[i + 1][j] && curr != board[i][j + 1])) {
-                    return true;
-                }
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[i][j] == 0) {
+                return false
             }
             else {
-                return false
+                if (board[i][j] == board[i + 1][j] || board[i][j] == board[i][j + 1]) {
+                    return false;
+                }
             }
         }
     }
-    return false;
+
+    for (let i = 0; i <= 2; i++) {
+        let j=3;
+        if (board[i][j] == 0 || board[j][i] == 0) {
+            return false
+        }
+        else {
+            if (board[i][j] == board[i + 1][j] || board[j][i] == board[j][i + 1]) {
+                return false;
+            }
+        }
+
+    }
+    if(board[3][3]==0)  return false;
+    
+    return true;
 }
 
 function winnerPresent(board) {
@@ -166,7 +182,13 @@ function resetgrid() {
 
 }
 
-function updateScore(board) {//////////
+function updateScore(scores) {//////////
+    let currScore = document.getElementById("score")
+    let num = scores.toString()
+    let str = "score: " + num
+    // console.log(str)
+    currScore.textContent = ""
+    currScore.textContent = str
 
 }
 
@@ -185,11 +207,11 @@ function updateValues(board) {
     }
 }
 
-function generateRandomTile(board){
+function generateRandomTile(board) {
     let row = Math.floor(Math.random() * 4);
     let col = Math.floor(Math.random() * 4);
-    let num  = 2;
-    while (board[row][col] != 0) {        
+    let num = 2;
+    while (board[row][col] != 0) {
         row = Math.floor(Math.random() * 4);
         col = Math.floor(Math.random() * 4);
     }
@@ -214,18 +236,22 @@ let colours = {
 };
 
 let board = initializeGame()
-let score=0
-// while (!EndGameChecker(board)) {
-//take input
+let Totalscore = 0
 document.onkeydown = function (event) {
+    let score = 0
     switch (event.keyCode) {
         case 37:
-            console.log("left")
             score, board = moveLeft(board)
+            // console.log("ggggggggggggg", score, Totalscore)
             win = winnerPresent(board)
             gameOver = EndGameChecker(board)
-            if (gameOver){
-                // alert("GAME OVER")
+            console.log(gameOver)
+            Totalscore = Totalscore + score
+            // console.log("vdgvgdgvgdg", score, Totalscore)
+            // updateScore(Totalscore)
+            if (gameOver) {
+                printmat(board)
+                alert("GAME OVER")
             }
             if (!win) {
                 //make a function to generate a random tile at empty place
@@ -236,13 +262,22 @@ document.onkeydown = function (event) {
                 //make a function to print you won
                 alert("you won")
                 board = initializeGame()
-
-            }   
+            }
             break;
         case 38:
-            console.log("up")
+            // console.log("up")
             score, board = moveUp(board)
+            // console.log("ggggggggggggg", score, Totalscore)
             win = winnerPresent(board)
+            Totalscore = Totalscore + score
+            // updateScore(Totalscore)
+            gameOver = EndGameChecker(board)
+            console.log(gameOver)
+            // console.log("vdgvgdgvgdg", score, Totalscore)
+            if (gameOver) {
+                printmat(board)
+                alert("GAME OVER")
+            }
             if (!win) {
                 //make a function to generate a random tile at empty place
                 board = generateRandomTile(board);
@@ -251,26 +286,22 @@ document.onkeydown = function (event) {
             else {
                 //make a function to print you won
                 alert("you won")
-            }   
+            }
             break;
         case 39:
-            console.log("right")
+            // console.log("right")
             score, board = moveRight(board)
+            // console.log("ggggggggggggg", score, Totalscore)
             win = winnerPresent(board)
-            if (!win) {
-                //make a function to generate a random tile at empty place
-                board = generateRandomTile(board);
-                updateFrontend(board);
-           }
-            else {
-                //make a function to print you won
-                alert("you won")
-            }   
-            break;
-        case 40:
-            console.log("down")
-            score, board = moveDown(board)
-            win = winnerPresent(board)
+            Totalscore = Totalscore + score
+            gameOver = EndGameChecker(board)
+            console.log(gameOver)
+            // console.log("vdgvgdgvgdg", score, Totalscore)
+            // updateScore(Totalscore)
+            if (gameOver) {
+                printmat(board)
+                alert("GAME OVER")
+            }
             if (!win) {
                 //make a function to generate a random tile at empty place
                 board = generateRandomTile(board);
@@ -279,18 +310,34 @@ document.onkeydown = function (event) {
             else {
                 //make a function to print you won
                 alert("you won")
-            }   
+            }
             break;
-        
+        case 40:
+            // console.log("down")
+            score, board = moveDown(board)
+            // console.log("ggggggggggggg", score, Totalscore)
+            win = winnerPresent(board)
+            Totalscore = Totalscore + score
+            gameOver = EndGameChecker(board)
+            console.log(gameOver)
+            // console.log("vdgvgdgvgdg", score, Totalscore)
+            // updateScore(Totalscore)
+            if (gameOver) {
+                printmat(board)
+                alert("GAME OVER")
+            }
+            if (!win) {
+                //make a function to generate a random tile at empty place
+                board = generateRandomTile(board);
+                updateFrontend(board);
+            }
+            else {
+                //make a function to print you won
+                alert("you won")
+            }
+            break;
     }
-    // updateFrontend(board)
-    
 };
-// printmat(board)
 
-
-// }
-
-
-
+document.getElementById("Newgame").addEventListener("click", initializeGame);
 
